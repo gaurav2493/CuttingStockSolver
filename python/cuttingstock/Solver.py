@@ -1,7 +1,7 @@
 '''
 Created on Jun 1, 2014
 
-@author: Devesh
+@author: Gaurav
 '''
 from abc import ABCMeta, abstractmethod 
 class Solver(object):
@@ -15,13 +15,16 @@ class Solver(object):
         '''
         Constructor
         '''
-        self.input=-inputDictionary
+        self.inputData=inputDictionary
         self.maxSize=maxSize
-    def combinationGenerator(self,combination):
+    def combinationGenerator(self):
         pass
     
-    def __getUpperLimit(self,combination):
-        pass
+    def __getUpperLimit(self):
+        limit={}
+        for key,value in self.inputData.iteritems():
+            limit.update({key:min(value,self.maxSize/key)})
+        return limit
     
     @abstractmethod
     def getResult(self):
