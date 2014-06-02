@@ -4,6 +4,7 @@ Created on Jun 1, 2014
 @author: Gaurav
 '''
 from abc import ABCMeta, abstractmethod 
+from cuttingstock.Combination import Combination
 class Solver(object):
     '''
     classdocs
@@ -29,15 +30,15 @@ class Solver(object):
         selectedPosition=len(qtyMax)-1
         
         loopingContinue=True
-        while (loopingContinue):
-                   
+        while (loopingContinue):       
             for qty in range(0,qtyMax[selectedPosition]+1):
-                combination={}
+                combinationDict={}
                 k=0
                 for i,j in self.inputData.iteritems():
-                    combination.update({i:qtyTemp[k]})
+                    combinationDict.update({i:qtyTemp[k]})
                     k+=1
-                combinations.append(combination)
+                
+                combinations.append(Combination(combinationDict))
                     
                 qtyTemp[selectedPosition]+=1
             while (True):

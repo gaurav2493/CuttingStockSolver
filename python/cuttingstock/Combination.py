@@ -22,5 +22,5 @@ class Combination(object):
         return size
     
     def __str__(self):
-        print self.size_qty
+        return str(self.size_qty)
         
