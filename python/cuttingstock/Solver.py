@@ -18,7 +18,33 @@ class Solver(object):
         self.inputData=inputDictionary
         self.maxSize=maxSize
     def combinationGenerator(self):
-        pass
+        limit=self.__getUpperLimit()
+        print "limit = ", limit
+        qtyMax=[]
+        qtyTemp=[]
+        for size,qty in limit.items():
+            qtyMax.append(qty)
+            qtyTemp.append(0)
+        
+        selectedPosition=len(qtyMax)-1
+        
+        loopingContinue=True
+        while (loopingContinue):            
+            for qty in range(0,qtyMax[selectedPosition]+1):
+                print qtyTemp
+                qtyTemp[selectedPosition]+=1
+            while (True):
+                qtyTemp[selectedPosition]=0
+                selectedPosition-=1
+                if(selectedPosition==-1):
+                    loopingContinue=False
+                    
+                if(qtyTemp[selectedPosition]< qtyMax[selectedPosition]):
+                    qtyTemp[selectedPosition]+=1
+                    break
+                
+            selectedPosition=len(qtyMax)-1
+                    
     
     def __getUpperLimit(self):
         limit={}

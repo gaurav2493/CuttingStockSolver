@@ -8,4 +8,4 @@ if __name__ == '__main__':
     inputp={200:5,600:8,700:3}
     max_size=2000
     a=GreedySolver(inputp,max_size)
-    a.getResult()
+    a.combinationGenerator()
