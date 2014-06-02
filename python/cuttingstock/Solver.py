@@ -10,7 +10,6 @@ class Solver(object):
     '''
     __metaclass__ = ABCMeta
 
-
     def __init__(self, inputDictionary,maxSize):
         '''
         Constructor
@@ -18,6 +17,7 @@ class Solver(object):
         self.inputData=inputDictionary
         self.maxSize=maxSize
     def combinationGenerator(self):
+        combinations=[]
         limit=self.__getUpperLimit()
         print "limit = ", limit
         qtyMax=[]
@@ -29,9 +29,16 @@ class Solver(object):
         selectedPosition=len(qtyMax)-1
         
         loopingContinue=True
-        while (loopingContinue):            
+        while (loopingContinue):
+                   
             for qty in range(0,qtyMax[selectedPosition]+1):
-                print qtyTemp
+                combination={}
+                k=0
+                for i,j in self.inputData.iteritems():
+                    combination.update({i:qtyTemp[k]})
+                    k+=1
+                combinations.append(combination)
+                    
                 qtyTemp[selectedPosition]+=1
             while (True):
                 qtyTemp[selectedPosition]=0
@@ -44,6 +51,8 @@ class Solver(object):
                     break
                 
             selectedPosition=len(qtyMax)-1
+
+        return combinations
                     
     
     def __getUpperLimit(self):

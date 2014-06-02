@@ -20,4 +20,7 @@ class Combination(object):
         for key,value in self.size_qty.iteritems():
             size+= key*value
         return size
+    
+    def __str__(self):
+        print self.size_qty
         
