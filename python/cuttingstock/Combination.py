@@ -21,6 +21,9 @@ class Combination(object):
             size+= key*value
         return size
     
+    def getDict(self):
+        return self.size_qty
+    
     def __str__(self):
         return str(self.size_qty)
         

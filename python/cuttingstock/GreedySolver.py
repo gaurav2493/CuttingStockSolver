@@ -11,10 +11,10 @@ class GreedySolver(Solver):
     '''
     def getResult(self):
         combinations=self.combinationGenerator()
-        
+        qtyLeft=self.inputData.copy()
         bestSum=0
         for combination in combinations:
             if(combination.getCombinationSize()>bestSum):
-                bestCombination=combination
-        
-        pass
+                bestCombination=combination.getCombinationSize()
+       
+                
