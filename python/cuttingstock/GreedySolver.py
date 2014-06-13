@@ -16,16 +16,16 @@ class GreedySolver(Solver):
         continueLoop=True
         while continueLoop:
             bestSum=0
-            for combination in combinations:
+            for combination in combinations:    # loop for selecting the best available combination
                 totalSum=combination.getCombinationSize()
-                if(bestSum<totalSum):
+                if(bestSum<totalSum and self.__isAvailable__(combination)):
                     bestSum=totalSum
                     selectedCombination=combination
 
-            if(self.__isAvailable__(combination)):
-                for size,qty in selectedCombination.getDict().iteritems():
-                    self.qtyLeft.update({size:(self.qtyLeft.get(size)-qty)})
-                print selectedCombination
+             
+            for size,qty in selectedCombination.getDict().iteritems():  #Reduction in quantity left
+                self.qtyLeft.update({size:(self.qtyLeft.get(size)-qty)})
+            print selectedCombination
             
             continueLoop=False
             for size,qty in self.qtyLeft.iteritems():
@@ -33,7 +33,7 @@ class GreedySolver(Solver):
                     continueLoop=True
                     break;                
 
-    def __isAvailable__(self,combination):
+    def __isAvailable__(self,combination):  #Checks if the combination is feasible or not.
         for size,qty in combination.getDict().iteritems():
             if(qty>self.qtyLeft.get(size)):
                 return False
