@@ -11,6 +11,7 @@ class GreedySolver(Solver):
     '''
     def getResult(self):
         
+        outputCombination=[] # A list of objects of class Combination which would be returns
         combinations=self.combinationGenerator() # returns list of objects of class Combination
         self.qtyLeft=self.inputData.copy() # Type Dictionary {size:quantity}
         continueLoop=True
@@ -25,13 +26,14 @@ class GreedySolver(Solver):
              
             for size,qty in selectedCombination.getDict().iteritems():  #Reduction in quantity left
                 self.qtyLeft.update({size:(self.qtyLeft.get(size)-qty)})
-            print selectedCombination
+            outputCombination.append(selectedCombination)
             
             continueLoop=False
             for size,qty in self.qtyLeft.iteritems():
                 if(qty>0):
                     continueLoop=True
                     break;                
+        return outputCombination          
 
     def __isAvailable__(self,combination):  #Checks if the combination is feasible or not.
         for size,qty in combination.getDict().iteritems():
