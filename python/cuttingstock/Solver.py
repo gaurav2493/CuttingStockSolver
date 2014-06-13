@@ -18,8 +18,8 @@ class Solver(object):
         self.inputData=inputDictionary
         self.maxSize=maxSize
     def combinationGenerator(self):
-        combinations=[]
-        limit=self.__getUpperLimit()
+        combinations=[] #A list of objects of class Combination
+        limit=self.__getUpperLimit() # A list of maximum quantities of each size.
         qtyMax=[]
         qtyTemp=[]
         for size,qty in limit.items():
