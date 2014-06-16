@@ -22,11 +22,13 @@ class GreedySolver(Solver):
                 if(bestSum<totalSum and self.__isAvailable__(combination)):
                     bestSum=totalSum
                     selectedCombination=combination
-
-             
-            for size,qty in selectedCombination.getDict().iteritems():  #Reduction in quantity left
-                self.qtyLeft.update({size:(self.qtyLeft.get(size)-qty)})
-            outputCombination.append(selectedCombination)
+            
+            while True:
+                for size,qty in selectedCombination.getDict().iteritems():  #Reduction in quantity left
+                    self.qtyLeft.update({size:(self.qtyLeft.get(size)-qty)})
+                outputCombination.append(selectedCombination)
+                if(self.__isAvailable__(selectedCombination)==False):
+                    break
             
             continueLoop=False
             for size,qty in self.qtyLeft.iteritems():
