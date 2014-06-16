@@ -23,7 +23,7 @@ class Solver(object):
         
     def combinationGenerator(self):
         combinations=[] #A list of objects of class Combination
-        limit=self.__getUpperLimit() # A list of maximum quantities of each size.
+        limit=self.__getUpperLimit__() # A list of maximum quantities of each size.
         qtyMax=[]
         qtyTemp=[]
         for size,qty in limit.items():
@@ -40,9 +40,13 @@ class Solver(object):
                 for i,j in self.inputData.iteritems():
                     combinationDict.update({i:qtyTemp[k]})
                     k+=1
-                combination=Combination(combinationDict)
-                if(combination.getCombinationSize()<=self.maxSize):
-                    combinations.append(combination)
+                    
+                size=0
+                for key,value in combinationDict.iteritems():
+                    size+= key*value                
+                
+                if(size<=self.maxSize):
+                    combinations.append(Combination(combinationDict))
                     
                 qtyTemp[selectedPosition]+=1
             while (True):
@@ -60,7 +64,7 @@ class Solver(object):
         return combinations
                     
     
-    def __getUpperLimit(self):
+    def __getUpperLimit__(self):
         limit={}
         for key,value in self.inputData.iteritems():
             limit.update({key:min(value,self.maxSize/key)})
