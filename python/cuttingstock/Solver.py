@@ -19,7 +19,7 @@ class Solver(object):
         self.maxSize=maxSize
         for size,qty in inputDictionary.iteritems():
             if(size>maxSize):
-                raise InputError("Max Size cannot be greater than cut size")
+                raise InputError("Max Size cannot be greater than cut size (", size,">",maxSize,")")
         
     def combinationGenerator(self):
         combinations=[] #A list of objects of class Combination

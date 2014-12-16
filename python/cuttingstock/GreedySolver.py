@@ -11,7 +11,7 @@ class GreedySolver(Solver):
     '''
     def getResult(self):
         
-        outputCombination=[] # A list of objects of class Combination which would be returns
+        outputCombination=[] # A list of objects of class Combination which would be returned
         combinations=self.combinationGenerator() # returns list of objects of class Combination
         self.qtyLeft=self.inputData.copy() # Type Dictionary {size:quantity}
         continueLoop=True
