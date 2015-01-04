@@ -8,9 +8,8 @@ from cuttingstock.Solver import Solver
 from cuttingstock.GreedySolver import GreedySolver
 from cuttingstock.Chromosome import Chromosome
 
-RANDOM_SPECIES_NO = 1
-randomFails = 300
-
+RANDOM_SPECIES_NO = 1000
+MAX_RANDOM_TRIALS = 10000
 
 class GeneticSolver(Solver):
     '''
@@ -29,15 +28,15 @@ class GeneticSolver(Solver):
 
             chromosomeMade = False
             qtyLeft=self.inputData.copy()
-
+            fails=0
             genes=[] # List containing genes (will form a chromosome)
-            while(chromosomeMade!=True and randomFails != 0):           
+            while(chromosomeMade!=True and fails<MAX_RANDOM_TRIALS):           
                 combi = random.choice(combinations)
                 chromosomeFeasible = True
 
                 for size,qty in combi.getDict().iteritems():
                     if(qty>qtyLeft.get(size)):
-                        --randomFails
+                        fails+=1
                         chromosomeFeasible = False
 
                 if(chromosomeFeasible):
@@ -51,14 +50,15 @@ class GeneticSolver(Solver):
                         chromosomeMade=False
                         break
                 
-                
-
+            #print fails
             # if chromosome still not made, give the remaining stock to greedy algo.
             if(chromosomeMade!=True):
+                #print "using greedy"
                 greedySolverObject = GreedySolver(qtyLeft,self.maxSize)
+                #print "obj created"
                 cutPatterns = greedySolverObject.getResult()
-                for combination in cutPatterns:
-                    genes.append(combination.getdict())
+                #print "got results"
+                genes.extend(cutPatterns)
                     
             chromosomes.append(Chromosome(genes, self.maxSize))
             

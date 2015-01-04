@@ -22,45 +22,43 @@ class Solver(object):
                 raise InputError("Max Size cannot be greater than cut size (", size,">",maxSize,")")
         
     def combinationGenerator(self):
-        combinations=[] #A list of objects of class Combination
         limit=self.__getUpperLimit__() # A list of maximum quantities of each size.
-        qtyMax=[]
-        qtyTemp=[]
-        for size,qty in limit.items():
-            qtyMax.append(qty)
-            qtyTemp.append(0)
         
-        selectedPosition=len(qtyMax)-1
-        
-        loopingContinue=True
-        while (loopingContinue):       
-            for qty in range(0,qtyMax[selectedPosition]+1):
-                combinationDict={}
-                k=0
-                for i,j in self.inputData.iteritems():
-                    combinationDict.update({i:qtyTemp[k]})
-                    k+=1
-                    
-                size=0
-                for key,value in combinationDict.iteritems():
-                    size+= key*value                
-                
-                if(size<=self.maxSize):
-                    combinations.append(Combination(combinationDict))
-                    
-                qtyTemp[selectedPosition]+=1
-            while (True):
-                qtyTemp[selectedPosition]=0
-                selectedPosition-=1
-                if(selectedPosition==-1):
-                    loopingContinue=False
-                    
-                if(qtyTemp[selectedPosition]< qtyMax[selectedPosition]):
-                    qtyTemp[selectedPosition]+=1
-                    break
-                
-            selectedPosition=len(qtyMax)-1
+        keys=[]
+        tmpCombi={}
+        for key in self.inputData.keys():
+            keys.append(key)
+            tmpCombi.update({key:0})
 
+        keys.sort(reverse=True)
+        
+        '''
+        suppose length of list = 5
+        for k,v in inputDictionary
+
+
+        '''
+        selectedIndex=len(keys)-1
+        combinations=[] #A list of objects of class Combination
+        while (True):
+            if(selectedIndex==-1):
+                break
+
+            if selectedIndex!=len(keys)-1: # if index is not last, then make all at right of selected index as 0
+                for i in range(selectedIndex+1,len(tmpCombi)):
+                    key=keys[i]
+                    tmpCombi.update({key:0})
+                key=keys[selectedIndex]
+                tmpCombi.update({key:tmpCombi[key]+1}) # increment at selected index
+            else: # increment last index
+                key=keys[selectedIndex]
+                tmpCombi.update({key:tmpCombi[key]+1}) # increment at selected index
+
+            if(self.__isFeasible__(tmpCombi,limit)): #check if increment possible at selected Index
+                combinations.append(Combination(tmpCombi.copy()))
+                selectedIndex=len(keys)-1
+            else:
+                selectedIndex-=1
         return combinations
                     
     
@@ -69,6 +67,16 @@ class Solver(object):
         for key,value in self.inputData.iteritems():
             limit.update({key:min(value,self.maxSize/key)})
         return limit
+        
+    def __isFeasible__(self,combination,limit):
+        sum=0
+        for key,value in combination.iteritems():
+            if(limit[key]<value):
+                return False
+            sum+=key*value
+        if(sum<=self.maxSize):
+            return True
+        return False
     
     @abstractmethod
     def getResult(self):
