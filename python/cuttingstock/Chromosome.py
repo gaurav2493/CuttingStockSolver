@@ -9,16 +9,25 @@ class Chromosome(object):
 	'''
     classdocs
     '''
-	
-	def __init__(self,genes,maxSize):
+	UNDERFIT=-1
+	FIT=0
+	OVERFIT=1
+
+	def __init__(self,genes,geneticSolverObject):
 	
 		self.size = len(genes)
 		self.genes = genes
-		self.maxSize = maxSize
+		self.maxSize = geneticSolverObject.maxSize
 		self.waste = self.__getTotalWaste__()
+		self.fitness = self.__fitnessValue__(geneticSolverObject.minAssumptionSize)
 		
-	def fitness(self):
-		pass
+	'''
+	(count of combinations which contain reusable size = (no of combi with reusable extras/total combis)*0.75) => 25%
+	(minimum logs required = L/P*0.75) => 75%
+	'''
+	def __fitnessValue__(self,min):
+		fitnessValue = min*1.0/self.size
+		return fitnessValue
 	
 	def __getTotalWaste__(self):
 		
@@ -28,14 +37,24 @@ class Chromosome(object):
 				totalSize+=size*qty
 				
 		return self.maxSize-totalSize
-	
-	def crossOver(self,chromosome):
-		pass
+
+	def getSolutionType(self,geneticSolverObject):  # to be revised
+		inputDict=geneticSolverObject.inputData.copy()
+		for gene in self.genes:
+			for key,value in gene.getDict().iteritems():
+				inputDict.update({key:value-gene.getDict()[key]})
+		for i in inputDict.iteritems():
+			if(i>0):
+				return "Chromosome.UNDERFIT"
+			else:
+				if(i<0):
+					return "Chromosome.OVERFIT"
+		return "Chromosome.FIT"
 	
 	def __str__(self):
 		
 		returnString = ""
 		for gene in self.genes:
 			returnString = returnString+str(gene)+"\n"
-		return returnString + "\n size = " + str(self.size)
+		return returnString + "\n size = " + str(self.size) + " fitness = " + str(self.fitness)
 
