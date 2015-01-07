@@ -5,6 +5,7 @@ Created on Dec 16, 2014
 '''
 import random
 import math
+import copy
 from cuttingstock.Solver import Solver
 from cuttingstock.GreedySolver import GreedySolver
 from cuttingstock.Chromosome import Chromosome
@@ -125,8 +126,36 @@ class GeneticSolver(Solver):
         return newSpecie
 
 
-    def mutate(self): # return a Specie in mutated form if required
-        pass
+    def mutate(self,chromosome): # return a Specie in mutated form if required
+        chromosome=copy.deepcopy(chromosome)
+        KVPairSum={}
+        for key in self.inputData.keys(): # kvpair initialized to 0
+            KVPairSum.update({key:0})
+        for key in self.inputData.keys(): #kvpair calculated 
+            for combi in chromosome.genes:
+                KVPairSum.update({key:KVPairSum[key]+combi.getDict()[key]})
+
+        for key,value in self.inputData.iteritems(): # reduction
+            diff=KVPairSum[key]-value
+            if(diff>0): # reducing from the combination of minimum size
+                for combi in chromosome.genes: # reducing
+                    while(diff>0 and combi.getDict()[key]>0):
+                        combi.getDict().update({key:combi.getDict()[key]-1})
+                        diff-=1
+        #fitnesss updation req
+
+        for key,value in self.inputData.iteritems(): # increment
+            diff=KVPairSum[key]-value
+            if(diff<0): # reducing from the combination of minimum size
+                for combi in chromosome.genes: # reducing
+                    while(diff<0 and combi.getCombinationSize()+key<=self.maxSize):
+                        combi.getDict().update({key:combi.getDict()[key]+1})
+                        diff+=1
+                if(diff!=0):
+                    chromosome=None
+        return chromosome
+
+
             
     def getResult(self):
         chromosomes = self.generateRandomSpecies(RANDOM_SPECIES_NO)
@@ -142,6 +171,12 @@ class GeneticSolver(Solver):
                 print j
             newSpecie = self.generateCrossOverSpecie(twoSelectedSpecies[0],twoSelectedSpecies[1])
             print "\n\n-----------result of crossover---------"
-            print newSpecie
+            print newSpecie            
+            print "Afer mutation"
+            newSpecie=self.mutate(newSpecie)
+            if(newSpecie==None):
+                print "Crossover and Mutation Failed"
+            else:
+                print newSpecie
         print "\n-------- solution --------"
         print chromosomes[self.bestSolutionIndex]

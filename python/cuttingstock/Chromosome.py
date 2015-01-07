@@ -20,6 +20,7 @@ class Chromosome(object):
 		self.maxSize = geneticSolverObject.maxSize
 		self.waste = self.__getTotalWaste__()
 		self.fitness = self.__fitnessValue__(geneticSolverObject.minAssumptionSize)
+		self.geneticSolverObject=geneticSolverObject
 		
 	'''
 	(count of combinations which contain reusable size = (no of combi with reusable extras/total combis)*0.75) => 25%
@@ -53,8 +54,17 @@ class Chromosome(object):
 	
 	def __str__(self):
 		
-		returnString = ""
+		returnString = "\t"
+		for key in sorted(self.geneticSolverObject.inputData):
+			returnString=returnString+ str(key)+"\t"
+		returnString=returnString+"\n"
+		i=1
 		for gene in self.genes:
-			returnString = returnString+str(gene)+"\n"
+			returnString=returnString+"S"+str(i)+"\t"
+			for key in sorted(self.geneticSolverObject.inputData):
+				returnString=returnString+str(gene.getDict()[key])+"\t"
+			returnString=returnString+"\n"
+			i+=1
+			#returnString = returnString+str(gene)+"\n"
 		return returnString + "\n size = " + str(self.size) + " fitness = " + str(self.fitness)
 
