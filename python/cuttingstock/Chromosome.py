@@ -68,3 +68,14 @@ class Chromosome(object):
 			#returnString = returnString+str(gene)+"\n"
 		return returnString + "\n size = " + str(self.size) + " fitness = " + str(self.fitness)
 
+	def printChromo(self):
+		i=1
+		for gene in self.genes:
+			res="("+str(i)+") "
+			for key,value in gene.getDict().iteritems():
+				if(value>0):
+					res=res+","+str(key)
+			print res
+			i+=1
+
+

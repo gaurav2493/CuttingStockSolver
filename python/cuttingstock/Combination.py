@@ -26,4 +26,11 @@ class Combination(object):
     
     def __str__(self):
         return str(self.size_qty)
+
+    def printCombi(self):
+        res=""
+        for key,value in self.size_qty.iteritems():
+            if(value>0):
+                res=res+","+str(key)
+        return res
         

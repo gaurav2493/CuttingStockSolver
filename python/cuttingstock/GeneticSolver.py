@@ -10,9 +10,9 @@ from cuttingstock.Solver import Solver
 from cuttingstock.GreedySolver import GreedySolver
 from cuttingstock.Chromosome import Chromosome
 
-RANDOM_SPECIES_NO = 25
-CROSSOVER_GENERATED_SPCEIE_NO = 10
-MAX_RANDOM_TRIALS = 10000
+RANDOM_SPECIES_NO = 300
+CROSSOVER_GENERATED_SPCEIE_NO = 0
+MAX_RANDOM_TRIALS = 1
 
 class GeneticSolver(Solver):
     '''
@@ -159,24 +159,26 @@ class GeneticSolver(Solver):
             
     def getResult(self):
         chromosomes = self.generateRandomSpecies(RANDOM_SPECIES_NO)
-        for chromo in chromosomes:
-            print chromo
+        '''for chromo in chromosomes:
+            print chromo'''
         self.prepareRouletteWheel(chromosomes)
         for val in self.roulettePositions:
             print val
         for i in range(0,CROSSOVER_GENERATED_SPCEIE_NO):
             twoSelectedSpecies = self.rouletteWheelSelector(chromosomes)
-            print "\n\n----Printing 2 selected----"
-            for j in twoSelectedSpecies:
-                print j
+            #print "\n\n----Printing 2 selected----"
+            '''for j in twoSelectedSpecies:
+                print j'''
             newSpecie = self.generateCrossOverSpecie(twoSelectedSpecies[0],twoSelectedSpecies[1])
-            print "\n\n-----------result of crossover---------"
+            '''print "\n\n-----------result of crossover---------"
             print newSpecie            
-            print "Afer mutation"
+            print "Afer mutation"'''
             newSpecie=self.mutate(newSpecie)
             if(newSpecie==None):
                 print "Crossover and Mutation Failed"
             else:
-                print newSpecie
+                print newSpecie.size
         print "\n-------- solution --------"
+        chromosomes[self.bestSolutionIndex].printChromo()
         print chromosomes[self.bestSolutionIndex]
+        return chromosomes[self.bestSolutionIndex]
