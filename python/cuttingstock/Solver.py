@@ -11,13 +11,15 @@ class Solver(object):
     '''
     __metaclass__ = ABCMeta
 
-    def __init__(self, inputDictionary,maxSize,max_waste_size=0):
+    def __init__(self, inputDictionary,maxSize,max_waste_size=0,countParam=0.5,reuseParam=0.5):
         '''
         Constructor
         '''
         self.inputData=inputDictionary
         self.maxSize=maxSize
         self.max_waste_size=max_waste_size
+        self.countParam=countParam
+        self.reuseParam=reuseParam
         for size,qty in inputDictionary.iteritems():
             if(size>maxSize):
                 raise InputError("Max Size cannot be greater than cut size (", size,">",maxSize,")")
