@@ -7,12 +7,13 @@ import random
 import math
 import copy
 import sys
+import os
 from cuttingstock.Solver import Solver
 from cuttingstock.GreedySolver import GreedySolver
 from cuttingstock.Chromosome import Chromosome
 
-RANDOM_SPECIES_NO = 300
-CROSSOVER_GENERATED_SPCEIE_NO = 300
+RANDOM_SPECIES_NO = 2000
+CROSSOVER_GENERATED_SPCEIE_NO = 2000
 MAX_RANDOM_TRIALS = 1
 
 class GeneticSolver(Solver):
@@ -158,10 +159,13 @@ class GeneticSolver(Solver):
             # Trying to reduce chromosome size
             if(chromosome!=None):
                 for gene in chromosome.genes:
+                    allzero=True
                     for value in gene.getDict().values():
                         if(value!=0):
-                            break;
-                    chromosome.genes.remove(gene)
+                            allzero=False
+                            break
+                    if allzero:
+                        chromosome.genes.remove(gene)
         except Exception as detail:
             #print str(detail),'Error on line {}'.format(sys.exc_info()[-1].tb_lineno)
             #print chromosome
@@ -187,15 +191,22 @@ class GeneticSolver(Solver):
             '''print "\n\n-----------result of crossover---------"
             print newSpecie            
             print "Afer mutation"'''
+            print newSpecie
+            print "Afer mutation"
             newSpecie=self.mutate(newSpecie)
             if(newSpecie==None):
                 print "Crossover and Mutation Failed"
                 self.crossoverfails+=1
             else:
                 print newSpecie.size
+                print newSpecie
+                print twoSelectedSpecies[0]
+                print twoSelectedSpecies[1]
+                os.system("pause")
                 chromosomes.append(newSpecie)
-                if(newSpecie.fitness>chromosomes[self.bestSolutionIndex].fitness):
+                '''if(newSpecie.fitness>chromosomes[self.bestSolutionIndex].fitness):
                     self.bestSolutionIndex=len(chromosomes)-1
+                '''
                 self.prepareRouletteWheel
         print "\n-------- solution --------"
         chromosomes[self.bestSolutionIndex].printChromo()
@@ -203,4 +214,13 @@ class GeneticSolver(Solver):
         print "waste = ",chromosomes[self.bestSolutionIndex].waste
         print "crossoverfails = ",self.crossoverfails,"total species = ",len(chromosomes)
        # print self.minAssumptionSize," * ",self.max_waste_size," - ",chromosomes[self.bestSolutionIndex].waste," ",(self.minAssumptionSize*self.max_waste_size)
+        counterrr=0
+        for chromo in chromosomes:
+            if(chromo.fitness>chromosomes[self.bestSolutionIndex].fitness):
+                self.bestSolutionIndex=counterrr;
+            counterrr+=1
+            print "fitness = ",chromo.fitness
+        chromosomes[self.bestSolutionIndex].printChromo()
+        print chromosomes[self.bestSolutionIndex]
+        print "waste = ",chromosomes[self.bestSolutionIndex].waste
         return chromosomes[self.bestSolutionIndex]

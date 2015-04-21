@@ -11,7 +11,7 @@ class Solver(object):
     '''
     __metaclass__ = ABCMeta
 
-    def __init__(self, inputDictionary,maxSize,max_waste_size=0,countParam=0.5,reuseParam=0.5):
+    def __init__(self, inputDictionary,maxSize,max_waste_size=0,countParam=0.2,reuseParam=0.8):
         '''
         Constructor
         '''

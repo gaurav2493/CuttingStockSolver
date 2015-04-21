@@ -21,15 +21,13 @@ class Chromosome(object):
 		self.maxSize = geneticSolverObject.maxSize
 		self.waste = self.__getTotalWaste__()
 		self.fitness = self.__fitnessValue__(geneticSolverObject.minAssumptionSize)
-		self.countParam=geneticSolverObject.countParam
-		self.reuseParam=geneticSolverObject.reuseParam
 		
 	'''
 	(count of combinations which contain reusable size = (no of combi with reusable extras/total combis)*0.75) => 25%
 	(minimum logs required = L/P*0.75) => 75%
 	'''
 	def __fitnessValue__(self,min):
-		fitnessValue = min*1.0/self.size*self.countParam + self.reuseParam*(min*self.geneticSolverObject.max_waste_size-self.waste)/(min*self.geneticSolverObject.max_waste_size)
+		fitnessValue = min*1.0/self.size*self.geneticSolverObject.countParam + self.geneticSolverObject.reuseParam*(min*self.geneticSolverObject.max_waste_size-self.waste)/(min*self.geneticSolverObject.max_waste_size)
 		#print min, self.geneticSolverObject.max_waste_size,self.waste
 		return fitnessValue
 
