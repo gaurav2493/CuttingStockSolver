@@ -28,12 +28,13 @@
   
 <div class="container">
   <div class="jumbotron">
+    
     <h1>Cutting Stock Problem Solver</h1>           
   </div>
   <h2>Choose an Algorithm</h2>
 	<center>
 	
-	<form id="form1" >
+	<form id="form1" action="/solution" >
 		<div class="well well-sm"><input type="radio" name="algoSelect" value="genetic" id="genetic" onclick="selectAlgo()">Genetic Approach</div>
 		
 		<div class="well well-sm"><input type="radio" name="algoSelect" value="greedy"  id="greedy" onclick="selectAlgo()">Greedy Approach</div></br>
@@ -61,8 +62,8 @@
         </thead>
         <tbody>
           <tr>
-            <td width=""><input type="number" class="form-control" id="bsize0" width="200" required></td>
-            <td width=""><input type="number" class="form-control" id="bqty0" width="200" required></td>
+            <td width=""><input type="number" class="form-control" id="bsize0" name="size0" width="200" required></td>
+            <td width=""><input type="number" class="form-control" id="bqty0" name="qty0" width="200" required></td>
           </tr>
         </tbody>
       </table>

@@ -13,7 +13,7 @@ from cuttingstock.GreedySolver import GreedySolver
 from cuttingstock.Chromosome import Chromosome
 
 RANDOM_SPECIES_NO = 2000
-CROSSOVER_GENERATED_SPCEIE_NO = 2000
+CROSSOVER_GENERATED_SPCEIE_NO = 800
 MAX_RANDOM_TRIALS = 1
 
 class GeneticSolver(Solver):
@@ -42,6 +42,7 @@ class GeneticSolver(Solver):
         chromosomes = []
 
         while(speciesGenerated!=amount):  # no of solutions != amount
+            self.progress=(speciesGenerated*1.0/amount)*50
 
             chromosomeMade = False
             qtyLeft=self.inputData.copy()
@@ -191,23 +192,17 @@ class GeneticSolver(Solver):
             '''print "\n\n-----------result of crossover---------"
             print newSpecie            
             print "Afer mutation"'''
-            print newSpecie
-            print "Afer mutation"
             newSpecie=self.mutate(newSpecie)
             if(newSpecie==None):
                 print "Crossover and Mutation Failed"
                 self.crossoverfails+=1
             else:
-                print newSpecie.size
-                print newSpecie
-                print twoSelectedSpecies[0]
-                print twoSelectedSpecies[1]
-                os.system("pause")
                 chromosomes.append(newSpecie)
                 '''if(newSpecie.fitness>chromosomes[self.bestSolutionIndex].fitness):
                     self.bestSolutionIndex=len(chromosomes)-1
                 '''
                 self.prepareRouletteWheel
+            self.progress=50+(i*1.0/CROSSOVER_GENERATED_SPCEIE_NO)*50
         print "\n-------- solution --------"
         chromosomes[self.bestSolutionIndex].printChromo()
         print chromosomes[self.bestSolutionIndex]
@@ -223,4 +218,5 @@ class GeneticSolver(Solver):
         chromosomes[self.bestSolutionIndex].printChromo()
         print chromosomes[self.bestSolutionIndex]
         print "waste = ",chromosomes[self.bestSolutionIndex].waste
+        print "crossoverfails = ",self.crossoverfails,"total species = ",len(chromosomes)
         return chromosomes[self.bestSolutionIndex]

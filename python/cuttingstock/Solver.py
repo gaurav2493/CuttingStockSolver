@@ -20,6 +20,8 @@ class Solver(object):
         self.max_waste_size=max_waste_size
         self.countParam=countParam
         self.reuseParam=reuseParam
+        self.progress=0
+        self.waste=0
         for size,qty in inputDictionary.iteritems():
             if(size>maxSize):
                 raise InputError("Max Size cannot be greater than cut size (", size,">",maxSize,")")

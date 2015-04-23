@@ -1,4 +1,5 @@
 var counter =1;
+var refreshIntervalId;
 function checkWasteSize()
 {
 	var stockSize =document.getElementById("stockSize").value;
@@ -6,7 +7,7 @@ function checkWasteSize()
 	//document.write(stockSize+blockSize);
 	if(wasteSize>stockSize)
 	{
-		alert("Please enter waste size less than or equal to "+ stockSize);
+		//alert("Please enter waste size less than or equal to "+ stockSize);
 	}
 }
 
@@ -26,8 +27,8 @@ function addMore() {
     var row = table.insertRow(table.rows.length);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
-    cell1.innerHTML = "<input type='number' class='form-control' id='bSize"+counter+ "' width='200' required>";
-    cell2.innerHTML = "<input type='number' class='form-control' id='bqty"+counter+" ' width='200' required>";
+    cell1.innerHTML = "<input type='number' class='form-control' id='bSize"+counter+ "' name='size"+counter+ "' width='200' required>";
+    cell2.innerHTML = "<input type='number' class='form-control' id='bqty"+counter+" ' name='qty"+counter+ "' width='200' required>";
 	counter++;
 }
 
@@ -52,15 +53,14 @@ var data;
 
 function getBlockSizeNumber()
 {
-	//alert("hello");
+	
 	algo = document.querySelector('input[name="algoSelect"]:checked').value;
 	stockSize=document.getElementById("stockSize").value;
 	wasteThreshold=document.getElementById("wasteThreshold").value;
 	var x = document.getElementById("form1");
     data = "{";
     var i;
-	//alert("ankit");
-	//alert(x);
+	
     for (i = 5; i < x.length-2 ;i++) {
         
 		
@@ -76,9 +76,6 @@ function getBlockSizeNumber()
 		}
     }
 	var json = data.substring(0, data.length-1) + "}";
-	alert(json);
-	loadXMLDoc();
-	return false;
 	
 }
 function loadXMLDoc()
@@ -96,10 +93,22 @@ xmlhttp.onreadystatechange=function()
   {
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
-    dalert(xmlhttp.responseText);
+    	response = xmlhttp.responseText;
+    	
+    	if(response.indexOf("progress")==0)
+    	{
+    		var progress=response.substring(9,response.length-1);
+    		document.getElementById("progressbar").setAttribute("style","width:"+progress+"0%");
+    		document.getElementById("progresstext").innerHTML=progress+" % Completed";
+    	}
+    	else
+    	{
+    		clearInterval(refreshIntervalId);
+    		document.write(response);
+    	}
     }
   }
-xmlhttp.open("GET","solution?stocksize="+stockSize+"&waste="+wasteThreshold+"&algo="+algo+"&data="+encodeURI(data),true);
+xmlhttp.open("GET","getProgress");
 xmlhttp.send();
 }
 
