@@ -1,31 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>CSP Solver</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-  <script src="/static/js/cutting.js"></script>
-  <script src="/static/js/jquery.min.js"></script>
-  <script src="/static/js/bootstrap.min.js"></script>
-</head>
-<body>
-
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">CSP Solver</a>
-    </div>
-    <div>
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About Algo</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-  
+{% include "header.html" %}
 <div class="container">
   <div class="jumbotron">
     
@@ -50,7 +23,9 @@
 				<label>Waste Threshold:</label>
 				<input type="number" class="form-control" id="wasteThreshold" name="wasteThreshold" required onblur="checkWasteSize()">
 			 </div>
+       <table><tr><td><span title="Value for stocks reduction">S </span></td><td><input type="range" min="0" max="100" value="20" name="slider" id="slider" onchange="changeSlider()"/></td><td><span title="Value for wastage reduction"> W</span</td></tr><tr><td></td><td id="slidervalue" align="center">0.2 : 0.8</td><td></td></tr></table>
 		</div>
+    <br/><br/>
 	
 	
 	<table class="table table-bordered" id="blockTable" >
@@ -75,22 +50,6 @@
 	
 	</form>
   <button class="btn btn-primary" onclick="return getBlockSizeNumber()" >Continue</button>
-	</div>
-	
-	
+	</div>	
 	</center>
-	
-	
-  
-  
-  
-
-  
-  
-  
-  
-  
-</div>
-<br><br><br><br>
-</body>
-</html>
+{% include "footer.html" %}

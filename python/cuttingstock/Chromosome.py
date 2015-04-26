@@ -28,7 +28,6 @@ class Chromosome(object):
 	'''
 	def __fitnessValue__(self,min):
 		a=min*1.0/self.size*self.geneticSolverObject.countParam
-		print min,self.geneticSolverObject.max_waste_size
 		b=self.geneticSolverObject.reuseParam*(min*self.geneticSolverObject.max_waste_size-self.waste)/(min*self.geneticSolverObject.max_waste_size)
 		fitnessValue = a+b//min*1.0/self.size*self.geneticSolverObject.countParam + self.geneticSolverObject.reuseParam*(min*self.geneticSolverObject.max_waste_size-self.waste)/(min*self.geneticSolverObject.max_waste_size)
 		#print min, self.geneticSolverObject.max_waste_size,self.waste

@@ -78,6 +78,12 @@ function getBlockSizeNumber()
 	var json = data.substring(0, data.length-1) + "}";
 	
 }
+function changeSlider()
+{
+  slidervalue=document.getElementById("slider").value;
+  document.getElementById("slidervalue").innerHTML=slidervalue/100 +" : "+(100-slidervalue)/100;
+}
+
 function loadXMLDoc()
 {
 var xmlhttp;
@@ -99,13 +105,18 @@ xmlhttp.onreadystatechange=function()
     	{
     		var progress=response.substring(9,response.length-1);
     		document.getElementById("progressbar").setAttribute("style","width:"+progress+"0%");
-    		document.getElementById("progresstext").innerHTML=progress+" % Completed";
+    		document.getElementById("progresstext").innerHTML=progress+" %";
     	}
     	else
     	{
     		clearInterval(refreshIntervalId);
     		document.write(response);
     	}
+    }
+    else if(xmlhttp.readyState==4)
+    {
+    	alert("An unexpected error occured");
+    	clearInterval(refreshIntervalId);
     }
   }
 xmlhttp.open("GET","getProgress");

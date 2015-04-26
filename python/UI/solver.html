@@ -1,31 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>CSP Solver</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-  <script src="/static/js/cutting.js"></script>
-  <script src="/static/js/jquery.min.js"></script>
-  <script src="/static/js/bootstrap.min.js"></script>
-</head>
-<body>
+{% from itertools import izip %}
+{% include "header.html" %}
 
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">CSP Solver</a>
-    </div>
-    <div>
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About Algo</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-  
 <div class="container">
   <div class="jumbotron">
  
@@ -38,7 +13,7 @@
 
 
 
-  <table class="table table-striped">
+  <table class="table table-striped" style="w">
                         <tr>
                             <th>Size</th>
                             <th>Quantity</th>
@@ -57,20 +32,17 @@
                         <tr>
                             <th>Stock no.</th>
                             <th>Pattern</th>
+                            <th>Leftover</th>
                         </tr>
-                        {% for item in outp %}
+                        {% for pattern,leftover in izip(outp, leftovers) %}
                         <tr>
                             <td><script>document.write(index++)</script></td>
-                            <td>{{ escape(item) }}</td>
+                            <td>{{ pattern }}</td>
+                            <td>{{ leftover }}</td>
                         </tr>
                         {% end %}
 
                     </table>
+                    <h3>Stock Required = {{len(outp)}}</h3>
                     <h3>Waste = {{waste}}</h3>
-
-
-  
-</div>
-<br><br><br><br>
-</body>
-</html>
+{% include "footer.html" %}

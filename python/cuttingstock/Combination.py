@@ -20,6 +20,9 @@ class Combination(object):
         for key,value in self.size_qty.iteritems():
             size+= key*value
         return size
+
+    def getLeftover(self,stocksize):
+        return stocksize-self.getCombinationSize()
     
     def getDict(self):
         return self.size_qty
@@ -31,6 +34,6 @@ class Combination(object):
         res=""
         for key,value in self.size_qty.iteritems():
             if(value>0):
-                res=res+","+str(key)
+                res=res+","+str(key)+"*"+str(value)
         return res
         

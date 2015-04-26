@@ -28,37 +28,25 @@ from tornado.options import define, options
 define("port", default=8888, help="run on the given port", type=int)
 currentThreads={}
  
-class SolverThread(object):
-    """ Threading example class
-
-    The run() method will be started and it will run in the background
-    until the application exits.
-    """
+class SolverThread(object): 
  
-    def __init__(self,inputDict,wasteThreshold,stocksize,algo,timestamp):
-        """ Constructor
+    def __init__(self,inputDict,wasteThreshold,stocksize,algo,timestamp,slider):
 
-        :type interval: int
-        :param interval: Check interval, in seconds
-        
-        self.inputDict=inputDict
-        self.wasteThreshold=wasteThreshold
-        self.stocksize=stocksize
-        self.algo=algo
-        """
-        thread = threading.Thread(target=self.run, args=(inputDict,wasteThreshold,stocksize,algo,timestamp))
+        thread = threading.Thread(target=self.run, args=(inputDict,wasteThreshold,stocksize,algo,timestamp,slider))
         thread.daemon = True                            # Daemonize thread
         thread.start()                                # Start the execution
  
-    def run(self,inputDict,wasteThreshold,stocksize,algo,timestamp):
+    def run(self,inputDict,wasteThreshold,stocksize,algo,timestamp,slider):
         waste=0
         self.algo=algo
         self.output=[]
+        self.leftoverArray=[]
         currentThreads.update({timestamp:self})
         print "hello"
         print "****",wasteThreshold,inputDict,stocksize,algo,timestamp,"****"
         if(algo=="genetic"):
-            a=GeneticSolver(inputDict,stocksize,wasteThreshold)
+            print slider,1-slider
+            a=GeneticSolver(inputDict,stocksize,wasteThreshold,countParam=slider,reuseParam=1-slider)
             self.solver=a
             chromo = a.getResult()
             i=1
@@ -68,6 +56,7 @@ class SolverThread(object):
                     if(value>0):
                         res=res+","+str(key)+"*"+str(value)+" "
                 self.output.append(res)
+                self.leftoverArray.append(gene.getLeftover(stocksize))
                 i+=1
             waste=chromo.waste
         else:
@@ -77,9 +66,11 @@ class SolverThread(object):
             i=1
             realwaste=0
             for combination in cutPatterns:
-                if(stocksize-combination.getCombinationSize()<waste):
-                    realwaste+=stocksize-combination.getCombinationSize()
-                self.output.append( str(i)+" " + combination.printCombi()) #+" waste = ",max_size-combination.getCombinationSize()
+                leftover=combination.getLeftover(stocksize)
+                self.leftoverArray.append(leftover)
+                if(leftover<wasteThreshold):
+                    realwaste+=leftover
+                self.output.append( combination.printCombi())
                 i+=1
             print "real waste = ",realwaste
             waste=realwaste
@@ -90,7 +81,7 @@ class SolverThread(object):
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         items = ["Item 1", "Item 2", "Item 3"]
-        self.render("UI/index.html", title="My title", items=items)
+        self.render("UI/index.html", title="CSP Solver")
 
 class AjaxProgressHandler(tornado.web.RequestHandler):
     def get(self):
@@ -100,56 +91,27 @@ class AjaxProgressHandler(tornado.web.RequestHandler):
             self.write("progress="+str(progress))
         else:
             obj=currentThreads[timestamp]
-            self.render("UI/solver.html", outp=obj.output,req=obj.solver.inputData,waste=obj.solver.waste,algo=obj.algo)
+            print obj.leftoverArray
+            self.render("UI/solver.html",title="Solution",outp=obj.output,req=obj.solver.inputData,waste=obj.solver.waste,algo=obj.algo,leftovers=obj.leftoverArray)
 
 class SolutionHandler(tornado.web.RequestHandler):
     def get(self):
-        output=[]
         inputDict = {}
-        waste=0
         stocksize=int(self.get_argument("stockSize", default="0", strip=False))
         wasteThreshold=int(self.get_argument("wasteThreshold", default="0", strip=False))
+        slider=int(self.get_argument("range", default="20", strip=False))/100.0
         algo=self.get_argument("algoSelect", default="", strip=False)
         timestamp=str(time.time())
         self.set_cookie("userTime", timestamp)
-        solverThread=SolverThread(inputDict,wasteThreshold,stocksize,algo,timestamp)
         print algo
         for i in range(0,(len(self.request.arguments)/2)):
             if(int(self.get_argument("size"+str(i), default="0", strip=False))==0):
                 continue
             inputDict.update({int(self.get_argument("size"+str(i), default="0", strip=False)):int(self.get_argument("qty"+str(i), default="0", strip=False))})
-        '''
-        print inputDict
-        print stocksize
-        print waste
-        #inputDict={1380:22,1520:25,1560:12,1710:14,1820:18,1880:18,1930:20,2000:10,2050:12,2100:14,2140:16,2150:18,2200:20}
-        if(algo=="genetic"):
-            a=GeneticSolver(inputDict,stocksize,wasteThreshold)
-            chromo = a.getResult()
-            i=1
-            for gene in chromo.genes:
-                res=""
-                for key,value in gene.getDict().iteritems():
-                    if(value>0):
-                        res=res+","+str(key)+"*"+str(value)+" "
-                output.append(res)
-                i+=1
-            waste=chromo.waste
-        else:
-            a=GreedySolver(inputDict,stocksize)
-            cutPatterns = a.getResult()
-            i=1
-            realwaste=0
-            for combination in cutPatterns:
-                if(stocksize-combination.getCombinationSize()<waste):
-                    realwaste+=stocksize-combination.getCombinationSize()
-                output.append( str(i)+" " + combination.printCombi()) #+" waste = ",max_size-combination.getCombinationSize()
-                i+=1
-            print "real waste = ",realwaste
-            waste=realwaste
-            self.render("UI/solver.html", outp=output,req=inputDict,waste=waste,algo=algo)
-        '''
-        self.render("UI/progress.html",outp=[],req={},waste=90,algo=algo)
+
+        solverThread=SolverThread(inputDict,wasteThreshold,stocksize,algo,timestamp,slider)
+        self.render("UI/progress.html",title="Procressing ....")
+
 
 def main():
     tornado.options.parse_command_line()

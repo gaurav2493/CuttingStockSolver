@@ -29,6 +29,8 @@ class GeneticSolver(Solver):
         for key,value in self.inputData.iteritems():
             sum+=key*value
         self.minAssumptionSize=sum/self.maxSize
+        if self.minAssumptionSize==0:
+            self.minAssumptionSize=1
         self.avgSize=-1 # will definitely be modified
         self.totalSpeciesGenerted=RANDOM_SPECIES_NO
         self.rouletteFitnessSum=0
@@ -181,8 +183,8 @@ class GeneticSolver(Solver):
         '''for chromo in chromosomes:
             print chromo'''
         self.prepareRouletteWheel(chromosomes)
-        for val in self.roulettePositions:
-            print val
+        '''for val in self.roulettePositions:
+            print val'''
         for i in range(0,CROSSOVER_GENERATED_SPCEIE_NO):
             twoSelectedSpecies = self.rouletteWheelSelector(chromosomes)
             #print "\n\n----Printing 2 selected----"
@@ -214,7 +216,7 @@ class GeneticSolver(Solver):
             if(chromo.fitness>chromosomes[self.bestSolutionIndex].fitness):
                 self.bestSolutionIndex=counterrr;
             counterrr+=1
-            print "fitness = ",chromo.fitness
+            #print "fitness = ",chromo.fitness
         chromosomes[self.bestSolutionIndex].printChromo()
         print chromosomes[self.bestSolutionIndex]
         print "waste = ",chromosomes[self.bestSolutionIndex].waste
